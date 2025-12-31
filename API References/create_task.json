@@ -1,0 +1,20 @@
+{
+  "method": "POST",
+  "url": "http://127.0.0.1:11349/tasks",
+  "body": {
+    "name": "Example Task",
+    "description": "Runs Notepad with a file",
+    "program_path": "C:\\\\Windows\\\\System32\\\\notepad.exe",
+    "parameters": "\"C:\\\\Windows\\\\System32\\\\drivers\\\\etc\\\\hosts\"",
+    "active": true,
+    "schedules": [
+      {
+        "schedule_type": "recurring",
+        "days_mask": 127,
+        "date": null,
+        "minute_of_day": 300,
+        "active": true
+      }
+    ]
+  }
+}

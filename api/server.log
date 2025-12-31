@@ -1,0 +1,10 @@
+2025-12-30T20:33:55.417608 OperationalError: 15 values for 16 columns
+Traceback (most recent call last):
+  File "C:\Users\Robbo\Desktop\Launchers\App Builds\RobCron\api\server.py", line 114, in do_POST
+    job_id = self.repo.create_job(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Robbo\Desktop\Launchers\App Builds\RobCron\src\robcorn\repository.py", line 61, in create_job
+    cursor = conn.execute(
+             ^^^^^^^^^^^^^
+sqlite3.OperationalError: 15 values for 16 columns
+

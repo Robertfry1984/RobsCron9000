@@ -1,0 +1,23 @@
+{
+  "update": {
+    "method": "PUT",
+    "url": "http://127.0.0.1:11349/tasks/1",
+    "body": {
+      "name": "Example Task Updated",
+      "active": false,
+      "schedules": [
+        {
+          "schedule_type": "recurring",
+          "days_mask": 127,
+          "date": null,
+          "minute_of_day": 360,
+          "active": true
+        }
+      ]
+    }
+  },
+  "delete": {
+    "method": "DELETE",
+    "url": "http://127.0.0.1:11349/tasks/1"
+  }
+}
