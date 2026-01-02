@@ -75,7 +75,7 @@ class Repository:
                      api_timeout, api_retries,
                      active, once_per_day, autostart, run_as_enabled, run_as_admin, run_as_user, run_as_domain,
                      run_as_password, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     name,

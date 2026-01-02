@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
     QToolBar,
     QVBoxLayout,
     QWidget,
+    QMessageBox,
 )
 
 from ..config import db_path
@@ -314,8 +315,13 @@ class MainWindow(QMainWindow):
         )
         if confirm != QMessageBox.StandardButton.Yes:
             return
-        self._repository.delete_job(job.id)
+        try:
+            self._repository.delete_job(job.id)
+        except Exception as exc:
+            QMessageBox.warning(self, "Delete", f"Delete failed: {exc}")
+            return
         self._load_jobs()
+        self.task_table.clearSelection()
 
     def _start_selected_job(self) -> None:
         row = self.task_table.currentRow()

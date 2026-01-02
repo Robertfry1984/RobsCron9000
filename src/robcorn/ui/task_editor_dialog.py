@@ -32,6 +32,7 @@ class TaskEditorDialog(QDialog):
         self._runner = JobRunner(repository.db_path)
         self._job_ids = [item.id for item in self._repository.list_jobs()]
         self._loading_job = False
+        self._is_new = job is None
         self.setWindowTitle("Z-Cron Task")
         self.resize(980, 560)
         self._editor = TaskEditor()
@@ -51,7 +52,15 @@ class TaskEditorDialog(QDialog):
             self._load_job()
         else:
             self.setWindowTitle("Settings Job N: New")
+            self._loading_job = True
+            self.job_spin.blockSignals(True)
             self.job_spin.setValue(max(self._job_ids, default=1))
+            self.job_spin.blockSignals(False)
+            self._loading_job = False
+            self.job_spin.setEnabled(False)
+            self.prev_button.setEnabled(False)
+            self.next_button.setEnabled(False)
+            self._reset_form()
 
     def _build_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -191,6 +200,10 @@ class TaskEditorDialog(QDialog):
             self._refresh_job_ids()
             self.job_spin.setMaximum(max(self._job_ids, default=1))
             self.job_spin.setValue(job_id)
+            self.job_spin.setEnabled(True)
+            self.prev_button.setEnabled(True)
+            self.next_button.setEnabled(True)
+            self._is_new = False
 
         minutes = self._scheduler.selected_minutes()
         schedule_type = self._scheduler.schedule_type()
@@ -254,6 +267,11 @@ class TaskEditorDialog(QDialog):
             self._scheduler.set_days_mask(slots[0].days_mask)
             self._scheduler.set_schedule_date(slots[0].date or "")
             self._scheduler.activate_checkbox.setChecked(slots[0].active)
+        else:
+            self._scheduler.set_selected_minutes([])
+            self._scheduler.set_schedule_type("recurring")
+            self._scheduler.set_days_mask(0)
+            self._scheduler.activate_checkbox.setChecked(True)
 
     def _open_tools(self) -> None:
         dialog = ToolsDialog(self)
@@ -338,7 +356,7 @@ class TaskEditorDialog(QDialog):
         self._job_ids = [item.id for item in self._repository.list_jobs()]
 
     def _job_spin_changed(self, value: int) -> None:
-        if self._loading_job:
+        if self._loading_job or self._is_new:
             return
         job = self._repository.get_job(value)
         if job:
@@ -360,3 +378,34 @@ class TaskEditorDialog(QDialog):
         larger = [job_id for job_id in self._job_ids if job_id > current]
         if larger:
             self.job_spin.setValue(min(larger))
+
+    def _reset_form(self) -> None:
+        self._editor.label_input.clear()
+        self._editor.description_input.clear()
+        self._editor.send_to_input.clear()
+        self._editor.program_input.clear()
+        self._editor.parameters_input.clear()
+        self._editor.batch_input.clear()
+        self._editor.api_checkbox.setChecked(False)
+        self._editor.api_button.setEnabled(False)
+        self._api_method = ""
+        self._api_url = ""
+        self._api_headers = ""
+        self._api_body = ""
+        self._api_auth_type = ""
+        self._api_auth_value = ""
+        self._api_timeout = 0
+        self._api_retries = 0
+        self._editor.active_checkbox.setChecked(True)
+        self._editor.once_checkbox.setChecked(False)
+        self._editor.autostart_checkbox.setChecked(False)
+        self._editor.run_as_checkbox.setChecked(False)
+        self._run_as.set_credentials_enabled(False)
+        self._run_as.admin_checkbox.setChecked(False)
+        self._run_as.user_input.clear()
+        self._run_as.domain_input.clear()
+        self._run_as.password_input.clear()
+        self._scheduler.set_selected_minutes([])
+        self._scheduler.set_schedule_type("recurring")
+        self._scheduler.set_days_mask(0)
+        self._scheduler.activate_checkbox.setChecked(True)
